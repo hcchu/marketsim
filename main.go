@@ -4,7 +4,6 @@ import (
     "fmt"
     "os"
     "bufio"
-    "sort"
 
     "github.com/hcchu/marketsim/marketsim"
 )
@@ -23,10 +22,13 @@ func main() {
 			break
 		}
         orderline := marketsim.ParseOrder(line)
-        order_book = append(order_book, *orderline)
-        sort.Sort(marketsim.ByTimestamp(order_book))
-        sort.Sort(marketsim.ByPrice(order_book))
-        fmt.Println(order_book)
-        fmt.Println(order_book[0])
+        marketsim.DispatchOrder(orderline, &bid_book, &ask_book)
+        //order_book = append(order_book, *orderline)
+        //sort.Sort(marketsim.ByTimestamp(order_book))
+        //sort.Sort(marketsim.ByPrice(order_book))
+        //fmt.Println(order_book)
+        //fmt.Println(order_book[0])
+        fmt.Println(bid_book)
+        fmt.Println(ask_book)
 	}
 }
