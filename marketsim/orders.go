@@ -25,7 +25,7 @@ type ByPrice []Order
 
 func (a ByPrice) Len() int { return len(a) }
 func (a ByPrice) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
-// Sort bid order by highest price, ask order by lowest 
+// Sort buy order by highest price, sell order by lowest 
 func (a ByPrice) Less(i, j int) bool { 
     if a[i].OrderType == "BUY" {
         return a[i].Price > a[j].Price 
@@ -54,16 +54,17 @@ func ParseOrder(o string) *Order {
 }
 
 // Send order to the proper order book
-func DispatchOrder(o *Order, b *[]Order, a *[]Order) {
+func DispatchOrder(o *Order, b *[]Order, s *[]Order) {
     switch {
     case o.OrderType == "BUY":
         *b = append(*b, *o)
         sort.Sort(ByTimestamp(*b))
         sort.Sort(ByPrice(*b))
     case o.OrderType == "SELL":
-        *a = append(*a, *o)
-        sort.Sort(ByTimestamp(*a))
-        sort.Sort(ByPrice(*a))
+        *s = append(*s, *o)
+        sort.Sort(ByTimestamp(*s))
+        sort.Sort(ByPrice(*s))
     }
+    MatchEngine(*b, *s)
 }
 
