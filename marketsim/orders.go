@@ -10,8 +10,8 @@ import (
 type Order struct {
 	Timestamp  int64
 	OrderType string
-	Commodity  string
 	Price      float32
+	Commodity  string
 	Amount     int32
 }
 
@@ -45,9 +45,9 @@ func ParseOrder(o string) *Order {
     timestamp, _ := time.Parse(time.RFC3339, order_string[0])
     p.Timestamp = timestamp.Unix()
     p.OrderType = strings.ToUpper(order_string[1])
-    p.Commodity = order_string[2]
-    price, _ := strconv.ParseFloat(order_string[3], 32)
+    price, _ := strconv.ParseFloat(order_string[2], 32)
     p.Price = float32(price)
+    p.Commodity = order_string[3]
     amount, _ := strconv.ParseInt(order_string[4], 10, 32)
     p.Amount = int32(amount)
 	return p
@@ -57,14 +57,19 @@ func ParseOrder(o string) *Order {
 func DispatchOrder(o *Order, b *[]Order, s *[]Order) {
     switch {
     case o.OrderType == "BUY":
-        *b = append(*b, *o)
-        sort.Sort(ByTimestamp(*b))
-        sort.Sort(ByPrice(*b))
+        buy_result := MatchOrder(o, s, b)
+        if buy_result == false {
+            *b = append(*b, *o)
+            sort.Sort(ByTimestamp(*b))
+            sort.Sort(ByPrice(*b))
+        }
     case o.OrderType == "SELL":
-        *s = append(*s, *o)
-        sort.Sort(ByTimestamp(*s))
-        sort.Sort(ByPrice(*s))
+        sell_result := MatchOrder(o, s, b)
+        if sell_result == false {
+            *s = append(*s, *o)
+            sort.Sort(ByTimestamp(*s))
+            sort.Sort(ByPrice(*s))
+        }
     }
-    MatchEngine(*b, *s)
 }
 
