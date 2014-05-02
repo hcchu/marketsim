@@ -1,7 +1,6 @@
 package marketsim
 
 import "testing"
-import "fmt"
 
 func TestParseOrder(t *testing.T) {
 	in := "2014-04-01T16:19:00Z BUY 100.000 USD 100"
