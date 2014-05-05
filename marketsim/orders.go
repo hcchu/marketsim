@@ -5,7 +5,6 @@ import (
     "strconv"
     "time"
     "sort"
-    //"fmt"
 )
 
 type Order struct {
@@ -24,7 +23,7 @@ type ByTimestamp []Order
 
 func (a ByTimestamp) Len() int { return len(a) }
 func (a ByTimestamp) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
-func (a ByTimestamp) Less(i, j int) bool { return a[i].Timestamp > a[j].Timestamp }
+func (a ByTimestamp) Less(i, j int) bool { return a[i].Timestamp < a[j].Timestamp }
 
 type ByPrice []Order
 
@@ -36,11 +35,6 @@ func (a ByPrice) Less(i, j int) bool {
         return a[i].Price > a[j].Price 
     }
     return a[i].Price < a[j].Price
-}
-
-func NewBook() []Order {
-    o := make([]Order, 0)
-    return o
 }
 
 func NewOrderBook() map[OrderKey][]Order {
