@@ -12,8 +12,8 @@ import (
 
 func main() {
 	reader := bufio.NewReader(os.Stdin)
-    buy_book := marketsim.NewBook()
-    sell_book := marketsim.NewBook()
+
+    order_book := marketsim.NewOrderBook()
 
 	for {
 		line, err := reader.ReadString('\n')
@@ -22,6 +22,6 @@ func main() {
 			break
 		}
         orderline := marketsim.ParseOrder(line)
-        marketsim.DispatchOrder(orderline, &buy_book, &sell_book)
+        marketsim.DispatchOrder(orderline, &order_book)
 	}
 }

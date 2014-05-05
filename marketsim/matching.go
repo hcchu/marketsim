@@ -13,33 +13,35 @@ func MatchEngine(b []Order, s []Order) {
     }
 }
 
-func removeOrder(book *[]Order) {
-    copy((*book)[0:], (*book)[1:])
-    (*book)[len(*book)-1] = Order{}
-    *book = (*book)[:len(*book)-1]
+func removeOrder(b []Order) {
+    b = append(b[:0], b[1:]...)
 }
 
-func MatchOrder(o *Order, sell *[]Order, buy *[]Order) bool {
+func MatchOrder(o *Order, b *map[OrderKey][]Order) bool {
     switch {
-    case o.OrderType == "BUY" && len(*sell) == 0: 
+    case o.OrderType == "BUY" && len((*b)[OrderKey{o.Commodity, "SELL"}]) == 0:
         return false
-    case o.OrderType == "SELL" && len(*buy) == 0: 
+    case o.OrderType == "SELL" && len((*b)[OrderKey{o.Commodity, "BUY"}]) == 0:
         return false
     case o.OrderType == "BUY":
-        if o.Price >= (*sell)[0].Price {
-            fmt.Println("BUY ORDER EXECUTED for",
-            o.Commodity, "at", o.Price)
-            removeOrder(sell)
+        if o.Price >= ((*b)[OrderKey{o.Commodity, "SELL"}][0].Price) {
+            fmt.Println("BUY ORDER EXECUTED for", o.Commodity, "at", o.Price)
+            removeOrder((*b)[OrderKey{o.Commodity, "SELL"}])
+            return true
         }
-        return true
+        return false
     case o.OrderType == "SELL":
-        if o.Price <= (*buy)[0].Price {
+        if o.Price <= ((*b)[OrderKey{o.Commodity, "BUY"}][0].Price) {
             fmt.Println("SELL ORDER EXECUTED for",
             o.Commodity, "at", o.Price)
-            removeOrder(buy)
+            removeOrder((*b)[OrderKey{o.Commodity, "BUY"}])
+            return true
         }
-        return true
+        return false
     }
     return false
 }
+
+
+
 

@@ -5,6 +5,7 @@ import (
     "strconv"
     "time"
     "sort"
+    //"fmt"
 )
 
 type Order struct {
@@ -13,6 +14,10 @@ type Order struct {
 	Price      float32
 	Commodity  string
 	Amount     int32
+}
+
+type OrderKey struct {
+    Commodity, OrderType string
 }
 
 type ByTimestamp []Order
@@ -37,6 +42,11 @@ func NewBook() []Order {
     o := make([]Order, 0)
     return o
 }
+
+func NewOrderBook() map[OrderKey][]Order {
+    o := make(map[OrderKey][]Order)
+    return o
+}
         
 // Reads a string from stdin and returns Order type
 func ParseOrder(o string) *Order {
@@ -54,22 +64,13 @@ func ParseOrder(o string) *Order {
 }
 
 // Send order to the proper order book
-func DispatchOrder(o *Order, b *[]Order, s *[]Order) {
-    switch {
-    case o.OrderType == "BUY":
-        buy_result := MatchOrder(o, s, b)
-        if buy_result == false {
-            *b = append(*b, *o)
-            sort.Sort(ByTimestamp(*b))
-            sort.Sort(ByPrice(*b))
-        }
-    case o.OrderType == "SELL":
-        sell_result := MatchOrder(o, s, b)
-        if sell_result == false {
-            *s = append(*s, *o)
-            sort.Sort(ByTimestamp(*s))
-            sort.Sort(ByPrice(*s))
-        }
+func DispatchOrder(o *Order, b *map[OrderKey][]Order) {
+    result := MatchOrder(o, b)
+    if result == false {
+        (*b)[OrderKey{o.Commodity, o.OrderType}] = append((*b)[OrderKey{o.Commodity, o.OrderType}], *o)
+        sort.Sort(ByTimestamp((*b)[OrderKey{o.Commodity, o.OrderType}]))
+        sort.Sort(ByPrice((*b)[OrderKey{o.Commodity, o.OrderType}]))
     }
 }
+
 
