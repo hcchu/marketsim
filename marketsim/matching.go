@@ -1,6 +1,7 @@
 package marketsim
 
 import "fmt"
+import "sort"
 
 func MatchEngine(b []Order, s []Order) {
     switch {
@@ -25,6 +26,17 @@ func MatchOrder(o *Order, b *map[OrderKey][]Order) bool {
         return false
     case o.OrderType == "BUY":
         if o.Price >= ((*b)[OrderKey{o.Commodity, "SELL"}][0].Price) {
+            switch {
+            case o.Amount > ((*b)[OrderKey{o.Commodity, "SELL"}][0].Amount):
+                fmt.Println("BUY ORDER EXECUTED for", ((*b)[OrderKey{o.Commodity, "SELL"}][0].Amount), o.Commodity, "at", o.Price)
+                (*o).Amount = o.Amount - ((*b)[OrderKey{o.Commodity, "SELL"}][0].Amount)
+                (*b)[OrderKey{o.Commodity, o.OrderType}] = append((*b)[OrderKey{o.Commodity, o.OrderType}], *o)
+                sort.Sort(ByTimestamp((*b)[OrderKey{o.Commodity, o.OrderType}]))
+                sort.Sort(ByPrice((*b)[OrderKey{o.Commodity, o.OrderType}]))
+                removeOrder((*b)[OrderKey{o.Commodity, "SELL"}])
+                fmt.Println(*b)
+            }
+
             fmt.Println("BUY ORDER EXECUTED for", o.Commodity, "at", o.Price)
             removeOrder((*b)[OrderKey{o.Commodity, "SELL"}])
             return true
