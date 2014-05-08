@@ -67,4 +67,8 @@ func DispatchOrder(o *Order, b *map[OrderKey][]Order) {
     }
 }
 
+func removeOrder(b []Order) {
+    b = append(b[:0], b[1:]...)
+}
+
 
