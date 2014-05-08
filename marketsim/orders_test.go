@@ -12,11 +12,11 @@ func TestParseOrder(t *testing.T) {
 
 func TestDispatchOrder(t *testing.T) {
     order_in := Order{1396369140, "BUY", 100, "USD", 100}
-    sell_in := []Order{}
-    buy_in := make([]Order,0)
-    buy_out := []Order{{1396369140, "BUY", 100, "USD", 100}}
-    DispatchOrder(&order_in, &buy_in, &sell_in)
-    if buy_in[0] != buy_out[0] {
-        t.Errorf("DispatchOrder = %v, want %v", buy_in, buy_out)
+    book_in := make(map[OrderKey][]Order)
+    book_out := make(map[OrderKey][]Order)
+    book_out[OrderKey{"USD", "BUY"}] = []Order{{1396369140, "BUY", 100, "USD", 100}}
+    DispatchOrder(&order_in, &book_in)
+    if book_in[OrderKey{"USD", "BUY"}][0] != book_out[OrderKey{"USD", "BUY"}][0] {
+        t.Errorf("DispatchOrder = %v, want %v", book_in, book_out)
     }
 }
