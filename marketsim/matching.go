@@ -16,7 +16,7 @@ func MatchOrder(o *Order, b *map[OrderKey][]Order) bool {
             case o.Amount > sb[0].Amount:
                 fmt.Println("BUY ORDER EXECUTED for", sb[0].Amount, o.Commodity, "at", o.Price)
                 (*o).Amount = o.Amount - sb[0].Amount
-                removeOrder((*b)[OrderKey{o.Commodity, "SELL"}])
+                removeOrder(b, o.Commodity, "SELL")
                 // attempt to fill rest of order
                 DispatchOrder(o, b)
                 return true
@@ -26,7 +26,7 @@ func MatchOrder(o *Order, b *map[OrderKey][]Order) bool {
                 return true
             case o.Amount == sb[0].Amount:
                 fmt.Println("BUY ORDER EXECUTED for", o.Commodity, "at", o.Price)
-                removeOrder((*b)[OrderKey{o.Commodity, "SELL"}])
+                removeOrder(b, o.Commodity, "SELL")
                 return true
             }
         }
@@ -36,7 +36,7 @@ func MatchOrder(o *Order, b *map[OrderKey][]Order) bool {
             case o.Amount > bb[0].Amount:
                 fmt.Println("SELL ORDER EXECUTED for", bb[0].Amount, o.Commodity, "at", o.Price)
                 (*o).Amount = o.Amount - bb[0].Amount
-                removeOrder((*b)[OrderKey{o.Commodity, "BUY"}])
+                removeOrder(b, o.Commodity, "BUY")
                 // attempt to fill rest of order
                 DispatchOrder(o, b)
                 return true
@@ -46,7 +46,7 @@ func MatchOrder(o *Order, b *map[OrderKey][]Order) bool {
                 return true
             case o.Amount == bb[0].Amount:
                 fmt.Println("SELL ORDER EXECUTED for", o.Commodity, "at", o.Price)
-                removeOrder((*b)[OrderKey{o.Commodity, "BUY"}])
+                removeOrder(b, o.Commodity, "BUY")
                 return true
             }
         }
