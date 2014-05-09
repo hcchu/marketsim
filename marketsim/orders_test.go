@@ -46,3 +46,26 @@ func TestSellSort(t *testing.T) {
     }
 }
 
+func TestPartialBuy(t *testing.T) {
+    order_in := Order{1396369141, "BUY", 100, "USD", 100}
+    book_in := make(map[OrderKey][]Order)
+    book_out := make(map[OrderKey][]Order)
+    book_in[OrderKey{"USD", "SELL"}] = []Order{{1396369140, "SELL", 100, "USD", 60}}
+    book_out[OrderKey{"USD", "BUY"}] = []Order{{1396369141, "BUY", 100, "USD", 40}}
+    DispatchOrder(&order_in, &book_in)
+    if book_in[OrderKey{"USD", "BUY"}][0] != book_out[OrderKey{"USD", "BUY"}][0] {
+        t.Errorf("DispatchOrder = %v, want %v", book_in, book_out)
+    }
+}
+
+func TestPartialSell(t *testing.T) {
+    order_in := Order{1396369141, "SELL", 100, "USD", 100}
+    book_in := make(map[OrderKey][]Order)
+    book_out := make(map[OrderKey][]Order)
+    book_in[OrderKey{"USD", "BUY"}] = []Order{{1396369140, "BUY", 100, "USD", 60}}
+    book_out[OrderKey{"USD", "SELL"}] = []Order{{1396369141, "SELL", 100, "USD", 40}}
+    DispatchOrder(&order_in, &book_in)
+    if book_in[OrderKey{"USD", "SELL"}][0] != book_out[OrderKey{"USD", "SELL"}][0] {
+        t.Errorf("DispatchOrder = %v, want %v", book_in, book_out)
+    }
+}
