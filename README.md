@@ -18,6 +18,8 @@ multiple orders with the same price, earlier orders have priority.
 * The order book is a `map` of a struct key that looks like `{"USD", "BUY"}` to
   a slice of Order types.
 
-  ```map[{OrderKey}][]Order```
+  ```
+  map[{OrderKey}][]Order
+  ```
 
 
