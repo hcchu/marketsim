@@ -19,7 +19,7 @@ multiple orders with the same price, earlier orders have priority.
   a slice of Order types.
 
   ```
-  map[{OrderKey}][]Order
+  map[OrderKey][]Order
   ```
 
 
