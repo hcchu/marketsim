@@ -15,6 +15,7 @@ type Order struct {
 	Amount    int32
 }
 
+// Key for the orderbook map
 type OrderKey struct {
 	Commodity, OrderType string
 }
@@ -68,12 +69,7 @@ func DispatchOrder(o *Order, b *map[OrderKey][]Order) {
 	}
 }
 
-/*
-func removeOrder(b *[]Order) {
-    b = append(b[:0], b[1:]...)
-}
-*/
-
+// Removes the order at the top of the book
 func removeOrder(b *map[OrderKey][]Order, c string, s string) {
 	(*b)[OrderKey{c, s}] = append((*b)[OrderKey{c, s}][:0],
 		(*b)[OrderKey{c, s}][1:]...)
