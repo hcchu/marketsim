@@ -14,18 +14,18 @@ func MatchOrder(o *Order, b *map[OrderKey][]Order) bool {
 		if o.Price >= sb[0].Price {
 			switch {
 			case o.Amount > sb[0].Amount:
-				fmt.Println("BUY ORDER EXECUTED for", sb[0].Amount, o.Commodity, "at", o.Price)
+				fmt.Println("BUY ORDER", o.OrderID, "EXECUTED for", sb[0].Amount, o.Commodity, "at", o.Price, "matching", sb[0].OrderID)
 				(*o).Amount = o.Amount - sb[0].Amount
 				removeOrder(b, o.Commodity, "SELL")
 				// attempt to fill rest of order
 				DispatchOrder(o, b)
 				return true
 			case o.Amount < sb[0].Amount:
-				fmt.Println("BUY ORDER EXECUTED for", o.Amount, o.Commodity, "at", o.Price)
+				fmt.Println("BUY ORDER", o.OrderID, "EXECUTED for", o.Amount, o.Commodity, "at", o.Price, "matching", sb[0].OrderID)
 				(*b)[OrderKey{o.Commodity, "SELL"}][0].Amount = sb[0].Amount - o.Amount
 				return true
 			case o.Amount == sb[0].Amount:
-				fmt.Println("BUY ORDER EXECUTED for", o.Amount, o.Commodity, "at", o.Price)
+				fmt.Println("BUY ORDER", o.OrderID, "EXECUTED for", o.Amount, o.Commodity, "at", o.Price, "matching", sb[0].OrderID)
 				removeOrder(b, o.Commodity, "SELL")
 				return true
 			}
@@ -34,18 +34,18 @@ func MatchOrder(o *Order, b *map[OrderKey][]Order) bool {
 		if o.Price <= bb[0].Price {
 			switch {
 			case o.Amount > bb[0].Amount:
-				fmt.Println("SELL ORDER EXECUTED for", bb[0].Amount, o.Commodity, "at", o.Price)
+				fmt.Println("SELL ORDER", o.OrderID, "EXECUTED for", bb[0].Amount, o.Commodity, "at", o.Price, "matching", bb[0].OrderID)
 				(*o).Amount = o.Amount - bb[0].Amount
 				removeOrder(b, o.Commodity, "BUY")
 				// attempt to fill rest of order
 				DispatchOrder(o, b)
 				return true
 			case o.Amount < bb[0].Amount:
-				fmt.Println("SELL ORDER EXECUTED for", o.Amount, o.Commodity, "at", o.Price)
+				fmt.Println("SELL ORDER", o.OrderID, "EXECUTED for", o.Amount, o.Commodity, "at", o.Price, "matching", bb[0].OrderID)
 				(*b)[OrderKey{o.Commodity, "BUY"}][0].Amount = bb[0].Amount - o.Amount
 				return true
 			case o.Amount == bb[0].Amount:
-				fmt.Println("SELL ORDER EXECUTED for", o.Amount, o.Commodity, "at", o.Price)
+				fmt.Println("SELL ORDER", o.OrderID, "EXECUTED for", o.Amount, o.Commodity, "at", o.Price, "matching", bb[0].OrderID)
 				removeOrder(b, o.Commodity, "BUY")
 				return true
 			}

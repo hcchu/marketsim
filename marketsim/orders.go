@@ -13,6 +13,7 @@ type Order struct {
 	Price     float32
 	Commodity string
 	Amount    int32
+    OrderID   int
 }
 
 // Key for the orderbook map
@@ -45,7 +46,7 @@ func NewOrderBook() map[OrderKey][]Order {
 }
 
 // Reads a string from stdin and returns Order type
-func ParseOrder(o string) *Order {
+func ParseOrder(o string, order_id int) *Order {
 	order_string := strings.Fields(o)
 	p := new(Order)
 	timestamp, _ := time.Parse(time.RFC3339, order_string[0])
@@ -56,6 +57,7 @@ func ParseOrder(o string) *Order {
 	p.Commodity = order_string[3]
 	amount, _ := strconv.ParseInt(order_string[4], 10, 32)
 	p.Amount = int32(amount)
+    p.OrderID = order_id
 	return p
 }
 

@@ -15,13 +15,16 @@ func main() {
 
 	order_book := marketsim.NewOrderBook()
 
+    order_id := 1000
+
 	for {
 		line, err := reader.ReadString('\n')
 		if err != nil {
 			fmt.Println(err)
 			break
 		}
-		orderline := marketsim.ParseOrder(line)
+		orderline := marketsim.ParseOrder(line, order_id)
 		marketsim.DispatchOrder(orderline, &order_book)
+        order_id += 1
 	}
 }
